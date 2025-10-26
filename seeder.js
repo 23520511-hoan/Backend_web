@@ -1,6 +1,7 @@
 // seeder.js - Import sample data
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const slugify = require('slugify'); // Thêm slugify để tạo slug
 
 // 💡 Đảm bảo import từng Model từ file riêng của nó
 const User = require('./models/User');
@@ -41,14 +42,14 @@ const importData = async () => {
     const admin = await User.create({
       name: 'Admin User',
       email: 'admin@readly.com',
-      password: 'admin123', // Mật khẩu sẽ được hash bởi middleware trong User Model
+      password: 'admin123',
       role: 'admin'
     });
 
     const user = await User.create({
       name: 'John Doe',
       email: 'user@readly.com',
-      password: 'user123', // Mật khẩu sẽ được hash bởi middleware trong User Model
+      password: 'user123',
       phone: '0901234567'
     });
 
@@ -56,14 +57,14 @@ const importData = async () => {
 
     // 3. Create Categories
     const categories = await Category.insertMany([
-      { name: 'Văn học' },
-      { name: 'Kinh tế' },
-      { name: 'Tâm lý - Kỹ năng sống' },
-      { name: 'Thiếu nhi' },
-      { name: 'Khoa học công nghệ' },
-      { name: 'Lịch sử' },
-      { name: 'Triết học' },
-      { name: 'Ngoại ngữ' }
+      { name: 'Văn học', slug: slugify('Văn học', { lower: true }) },
+      { name: 'Kinh tế', slug: slugify('Kinh tế', { lower: true }) },
+      { name: 'Tâm lý - Kỹ năng sống', slug: slugify('Tâm lý - Kỹ năng sống', { lower: true }) },
+      { name: 'Thiếu nhi', slug: slugify('Thiếu nhi', { lower: true }) },
+      { name: 'Khoa học công nghệ', slug: slugify('Khoa học công nghệ', { lower: true }) },
+      { name: 'Lịch sử', slug: slugify('Lịch sử', { lower: true }) },
+      { name: 'Triết học', slug: slugify('Triết học', { lower: true }) },
+      { name: 'Ngoại ngữ', slug: slugify('Ngoại ngữ', { lower: true }) }
     ]);
 
     console.log('✅ Categories Created');
@@ -81,10 +82,34 @@ const importData = async () => {
 
     // 5. Create Publishers
     const publishers = await Publisher.insertMany([
-      { name: 'Nhà Xuất Bản Trẻ', address: 'TP. Hồ Chí Minh' },
-      { name: 'NXB Kim Đồng', address: 'Hà Nội' },
-      { name: 'NXB Tổng hợp TP.HCM', address: 'TP. Hồ Chí Minh' },
-      { name: 'NXB Lao Động', address: 'Hà Nội' }
+      { 
+        name: 'Nhà Xuất Bản Trẻ', 
+        address: { 
+          city: 'TP. Hồ Chí Minh', 
+          country: 'Việt Nam' 
+        } 
+      },
+      { 
+        name: 'NXB Kim Đồng', 
+        address: { 
+          city: 'Hà Nội', 
+          country: 'Việt Nam' 
+        } 
+      },
+      { 
+        name: 'NXB Tổng hợp TP.HCM', 
+        address: { 
+          city: 'TP. Hồ Chí Minh', 
+          country: 'Việt Nam' 
+        } 
+      },
+      { 
+        name: 'NXB Lao Động', 
+        address: { 
+          city: 'Hà Nội', 
+          country: 'Việt Nam' 
+        } 
+      }
     ]);
 
     console.log('✅ Publishers Created');
@@ -97,6 +122,7 @@ const importData = async () => {
     await Book.insertMany([
       {
         title: 'Mắt Biếc',
+        slug: slugify('Mắt Biếc', { lower: true }),
         description: 'Câu chuyện tình yêu tuổi học trò trong sáng nhưng đầy day dứt.',
         price: 100000,
         discountPrice: 85000,
@@ -111,6 +137,7 @@ const importData = async () => {
       },
       {
         title: 'Dế Mèn Phiêu Lưu Ký',
+        slug: slugify('Dế Mèn Phiêu Lưu Ký', { lower: true }),
         description: 'Tác phẩm văn học thiếu nhi kinh điển của Việt Nam.',
         price: 55000,
         coverImage: 'de-men.jpg',
@@ -124,6 +151,7 @@ const importData = async () => {
       },
       {
         title: 'Nhà Giả Kim',
+        slug: slugify('Nhà Giả Kim', { lower: true }),
         description: 'Cuốn tiểu thuyết nổi tiếng thế giới về hành trình đi tìm kho báu.',
         price: 90000,
         discountPrice: 79000,
@@ -140,6 +168,7 @@ const importData = async () => {
       },
       {
         title: 'Đắc Nhân Tâm',
+        slug: slugify('Đắc Nhân Tâm', { lower: true }),
         description: 'Nghệ thuật giao tiếp và đối nhân xử thế kinh điển.',
         price: 120000,
         coverImage: 'dac-nhan-tam.jpg',
@@ -155,6 +184,7 @@ const importData = async () => {
       },
       {
         title: 'Cha Giàu Cha Nghèo',
+        slug: slugify('Cha Giàu Cha Nghèo', { lower: true }),
         description: 'Bài học về quản lý tài chính cá nhân và đầu tư.',
         price: 150000,
         discountPrice: 135000,
@@ -168,6 +198,7 @@ const importData = async () => {
       },
       {
         title: 'Cho Tôi Xin Một Vé Đi Tuổi Thơ',
+        slug: slugify('Cho Tôi Xin Một Vé Đi Tuổi Thơ', { lower: true }),
         description: 'Một cuốn sách đầy hoài niệm về tuổi thơ tinh nghịch.',
         price: 80000,
         coverImage: 'tuoi-tho.jpg',
@@ -180,6 +211,7 @@ const importData = async () => {
       },
       {
         title: 'Bí Mật Của May Mắn',
+        slug: slugify('Bí Mật Của May Mắn', { lower: true }),
         description: 'Cuốn sách ngắn gọn, truyền cảm hứng về cách tạo ra vận may.',
         price: 65000,
         discountPrice: 59000,
