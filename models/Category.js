@@ -1,5 +1,6 @@
 // models/Category.js
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const categorySchema = new mongoose.Schema({
   name: {
@@ -32,7 +33,7 @@ const categorySchema = new mongoose.Schema({
 
 categorySchema.pre('save', function(next) {
   if (this.isModified('name')) {
-    this.slug = this.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+    this.slug = slugify(this.name, { lower: true, locale: 'vi' });
   }
   next();
 });
