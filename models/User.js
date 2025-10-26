@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       'Please provide a valid email'
-    ]
+    ],
+    index: true // Thêm index để tối ưu hóa tìm kiếm
   },
   password: {
     type: String,
@@ -62,11 +63,13 @@ userSchema.pre('save', async function(next) {
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
 // Match password
 userSchema.methods.matchPassword = async function(enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  const user = await this.model('User').findById(this._id).select('+password');
+  return await bcrypt.compare(enteredPassword, user.password);
 };
 
 // Generate reset password token
